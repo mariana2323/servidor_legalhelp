@@ -1,0 +1,40 @@
+.thumb-wrap{
+    float: left;
+    margin: 4px;
+    margin-right: 0;
+    padding: 4px;
+    display: inline;
+    overflow: hidden;
+}
+.thumb-wrap img {    
+    display:block;
+    margin:auto;
+}
+.thumb-wrap span {    
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    width: 110px;
+}
+.thumb{
+    background: #c84911;
+    padding: 3px;
+    padding-bottom: 3px;
+}
+.list-chat .user-photo{
+    width: 60px;
+    height: 60px;
+    background: #ccc;
+    border-radius: 50%;
+}
+.list-chat{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.list-chat .user-div{
+    width: 70%;
+    padding: 15px;
+    margin: 5px 10px, 0;
+}
