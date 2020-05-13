@@ -1,6 +1,6 @@
 <?php
 
-class caso_model extends CI_Model
+class CasoModel extends CI_Model
 {
   public function fGetCasos($filtro)
   {

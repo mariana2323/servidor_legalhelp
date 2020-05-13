@@ -1,10 +1,11 @@
 <?php
 
-class pago_model extends CI_Model
+class PagoModel extends CI_Model
 {
   public function fHabilitaPago($caso, $data)
   {
     $hoy = date('Y-m-d H:i:s');
+    $correcto = null;
     $idusuario = $this->session->session_user;
     //1. comprueba si es que el estado del caso es DIR o ASE
     $datacaso = $this->db->where("cas_id", $caso)->where("estado = 'DIR' OR estado = 'ASE'")->get("caso")->row_array();
@@ -12,9 +13,13 @@ class pago_model extends CI_Model
     {
       //se determina el nuevo estado a usar
       if ($datacaso["estado"] = 'DIR')
+      {
         $estado = 'PAS';
+      }
       else
+      {
         $estado = 'PAC';
+      }
       //se actualiza el campo de valor en el caso indicado
       $this->db->where("cas_id", $caso)->set("valor", $data["valor"])->update("caso");
       if ($this->db->trans_status())
@@ -22,17 +27,29 @@ class pago_model extends CI_Model
         //se crea el pago correspondiente con el cas_id y el valor a pagar
         $estado = $datacaso["estado"];
         if ($estado == 'DIR')
+        {
           $descripcion = "Pago por consultoría jurídica";
+        }
         else
+        {
           $descripcion = 'Pago para llevar a cabo la acción legal';
+        }
         if (!empty($data["xxx_iva"]))//si es que si tiene iva seteado
+        {
           $iva = ($data["xxx_iva"]) / 100;
+        }
         else
+        {
           $iva = 0;
+        }
         if (!empty($data["xxx_honorario"]))//si es que si tiene honorario seteado
+        {
           $honorario = $data["xxx_honorario"];
+        }
         else
+        {
           $honorario = 0;
+        }
         $total = ($data["valor"] + $honorario) * (1 + $iva);
         $datapago = array("pag_id" => 0, "cas_id" => $caso, "estado"=>$estado,"descripcion" => $descripcion, "valor" => $data["valor"],
           "iva" => $iva, "honorario" => $honorario, "total_servicio" => $total, "fecha_creacion" => $hoy, "usuario_crea" => $idusuario);
@@ -55,25 +72,40 @@ class pago_model extends CI_Model
                 //actualiza el caso con el estado nuevo
                 $this->db->where("cas_id", $caso)->set("estado", $estado)->update("caso");
                 if ($this->db->trans_status())
-                  true;
+                {
+                  $correcto = true;
+                }
               }
               else
-                return false;
+              {
+                $correcto = false;
+              }
             }
             else
-              return false;
+            {
+              $correcto = false;
+            }
           }
           else
-            return false;
+          {
+            $correcto = false;
+          }
         }
         else
-          return false;
+        {
+          $correcto = false;
+        }
       }
       else
-        return false;
+      {
+        $correcto = false;
+      }
     }
     else
-      return false;
+    {
+      $correcto = false;
+    }
+    return $correcto;
   }
   public function fGetRoles($filtro)
   {
@@ -81,14 +113,15 @@ class pago_model extends CI_Model
                                         IF(rol = 'ADM', 'Administrador', 
                                           IF(rol = 'ABG', 'Abogado', ''))) AS xxx_rol, fNombrePersona(usu_id) AS xxx_nombre_usuario");
     if (!empty($filtro))
+    {
       $this->db->like("fNombrePersona(usu_id)", $filtro, 'both');
+    }
     $query = $this->db->get("usuario");
     return $query->result_array();
   }
   public function fGetRolesCombo()
   {
-    $res = array(array("id" => 1, "rol" => "CLI", "xxx_rol" => "Cliente"),
+    return array(array("id" => 1, "rol" => "CLI", "xxx_rol" => "Cliente"),
       array("id" => 2, "rol" => "ADM", "xxx_rol" => "Administrador"), array("id" => 3, "rol" => "ABG", "xxx_rol" => "Abogado"));
-    return $res;
   }
 }

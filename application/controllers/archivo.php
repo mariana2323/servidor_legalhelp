@@ -12,11 +12,12 @@ class Archivo extends CI_Controller
 
   public function saveImage()
   {
+    $file_name = 'file_name';
+    $upl = 'upload_data';
     $id = $this->input->post('id');
     $tabla = $this->input->post('tabla');
     $correcto = true;
     $textoError = '';
-    $vnNroRand = rand(1, 150);
     $data = json_decode($this->input->post('data'), TRUE);
     $config['upload_path'] = '../servidor_legalhelp/img';
     switch ($tabla)
@@ -29,10 +30,12 @@ class Archivo extends CI_Controller
         $nombreImagen = $tabla . '_id' . $id;
         $config['allowed_types'] = 'docx|pdf';
         break;
+      default:
+        break;
     }
 
     $config['max_size'] = 2048;
-    $config['file_name'] = $nombreImagen;
+    $config[$file_name] = $nombreImagen;
     $this->load->library('upload', $config);
     $path = $config['upload_path'];
     if (!$this->upload->do_upload('xxx_archivo'))
@@ -43,26 +46,30 @@ class Archivo extends CI_Controller
     }
     else
     {
-      $uploadData = array('upload_data' => $this->upload->data());
+      $uploadData = array($upl => $this->upload->data());
       $files = get_filenames('../servidor_legalhelp/img/');
       //bucle para sobreescritura de archivo para un registro
       for ($i = 0; $i < count($files); $i++)
       {
         $pos = strpos($files[$i], $nombreImagen);
-        if ($pos != false && $files[$i] != $uploadData['upload_data']['file_name'])
+        if ($pos !== false && $files[$i] != $uploadData[$upl][$file_name])
+        {
           unlink('../servidor_legalhelp/img/' . $files[$i]);
+        }
       }
       switch ($tabla)
       {
         case "usuario":
-          $data["imagen"] = $uploadData['upload_data']['file_name'];
+          $data["imagen"] = $uploadData[$upl][$file_name];
           $data["usu_id"] = $id;
           $campoid = "usu_id";
           break;
         case "biblioteca":
-          $data["archivo"] = $uploadData['upload_data']['file_name'];
+          $data["archivo"] = $uploadData[$upl][$file_name];
           $data["bib_id"] = $id;
           $campoid = "bib_id";
+          break;
+        default:
           break;
       }
       if ($correcto)

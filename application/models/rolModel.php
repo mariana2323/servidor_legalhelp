@@ -1,6 +1,6 @@
 <?php
 
-class rol_model extends CI_Model
+class RolModel extends CI_Model
 {
   public function fGetRoles($filtro)
   {
@@ -8,14 +8,15 @@ class rol_model extends CI_Model
                                         IF(rol = 'ADM', 'Administrador', 
                                           IF(rol = 'ABG', 'Abogado', ''))) AS xxx_rol, fNombrePersona(usu_id) AS xxx_nombre_usuario");
     if (!empty($filtro))
+    {
       $this->db->like("fNombrePersona(usu_id)", $filtro, 'both');
+    }
     $query = $this->db->get("usuario");
     return $query->result_array();
   }
   public function fGetRolesCombo()
   {
-    $res = array(array("id" => 1, "rol" => "CLI", "xxx_rol" => "Cliente"),
+    return array(array("id" => 1, "rol" => "CLI", "xxx_rol" => "Cliente"),
       array("id" => 2, "rol" => "ADM", "xxx_rol" => "Administrador"), array("id" => 3, "rol" => "ABG", "xxx_rol" => "Abogado"));
-    return $res;
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class tipo_tarjeta_model extends CI_Model
+class TipoTarjetaModel extends CI_Model
 {
   public function fGetTipoTarjeta()
   {

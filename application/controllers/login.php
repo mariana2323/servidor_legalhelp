@@ -2,6 +2,7 @@
 
 class Login extends CI_Controller
 {
+  public $success = 'success';
   public function __construct()
   {
     parent::__construct();
@@ -16,15 +17,15 @@ class Login extends CI_Controller
     $result = $this->login_model->fLogin($usr, $pwd);
     if (!empty($result))
     {
-      //Variable de sesión para el permiso de acceso
-      //$this->session->set_userdata('session_nick', $result["acceso"]);
       //Variable de sesión para el usuario
       $this->session->set_userdata('session_user', $result["usu_id"]);
       //Resultados
-      $r = array("data" => $result, "success" => true);
+      $r = array("data" => $result, $this->success => true);
     }
     else
+    {
       $r = array("success" => false);
+    }
 
     echo json_encode($r);
   }
@@ -32,9 +33,13 @@ class Login extends CI_Controller
   {
     $usuario = $this->session->session_user;
     if (!empty($usuario))
+    {
       $result = $this->login_model->fLogged($usuario);
+    }
     else
-      $result = array("success"=>false);
+    {
+      $result = array($this->success => false);
+    }
     echo json_encode($result);
 
   }
@@ -52,12 +57,14 @@ class Login extends CI_Controller
       //Destruye la sesión actual
       $this->session->sess_destroy();
 
-      $result = array('success' => TRUE,
+      $result = array($this->success => TRUE,
         'message' => "Proyecto Exit.");
     }
     else
-      $result = array('success' => TRUE,
-        'message' => "Proyecto Exit.");
+    {
+      $result = array($this->success => TRUE,
+                      'message'      => "Proyecto Exit.");
+    }
 
     echo json_encode($result);
   }

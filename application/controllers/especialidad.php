@@ -2,6 +2,7 @@
 
 class Especialidad extends CI_Controller
 {
+  public $success = 'success';
   public function __construct()
   {
     parent::__construct();
@@ -11,32 +12,39 @@ class Especialidad extends CI_Controller
   public function getEspecialidades(){
     $result = $this->especialidad_model->fGetEspecialidades();
     if (!empty($result))
-      $r = array("success"=>true, "data"=>$result);
+    {
+      $r = array($this->success => true, "data" => $result);
+    }
     else
-      $r = array("success"=> false);
+    {
+      $r = array($this->success => false);
+    }
     echo json_encode($r);
   }
   public function saveEspecialidad()
   {
     $data = json_decode($this->input->post('data'), TRUE);
     $res = $this->general_model->fGrdSave("especialidad", "esp_id", $data);
-    $result = $res['success'];
+    $result = $res[$this->success];
     $newId = $res['newId'];
     $error = $res['error'];
     if ($result)
-      $r = array("success" => true,
-        "newId" => $newId);
+    {
+      $r = array($this->success => true,
+                 "newId"   => $newId);
+    }
     else
-      $r = array("success" => false,
-        "error" => $error);
-
+    {
+      $r = array($this->success => false,
+                 "error"   => $error);
+    }
     echo json_encode($r);
   }
   public function deleteEspecialidad()
   {
     $data = json_decode($this->input->post('data'), TRUE);
     $res = $this->general_model->fGrdDelete("especialidad", "esp_id", $data);
-    $r = array("success" => $res["success"]);
+    $r = array($this->success => $res[$this->success]);
     echo json_encode($r);
   }
 }

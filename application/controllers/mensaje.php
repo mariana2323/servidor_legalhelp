@@ -20,17 +20,17 @@ class Mensaje extends CI_Controller
     $caso = $this->input->post('caso');
     $ubicacion = $this->input->post('ubicacion');
     $tipo_usuario = $this->input->post('tipo_usuario');
-    //$datos = array();
     // Datos del reporte
     $d = $this->mensaje_model->fGetMensajes($caso, $tipo_usuario, $ubicacion);
     $datos['data'] = $d;
     if (!empty($d))
+    {
       $caso = $d[0]["cas_id"];
+    }
     else
+    {
       $caso = '0';
-    /*$datos['cabecera'] = h_cabecera_reporte($this->session->session_nick);
-    $datos['tiporeporte'] = $tipo;
-    $datos['idioma'] = $this->general->fObtenerIdioma($this->session->userdata('session_lang'));*/
+    }
     //Imprime reporte
     $result = $this->load->view('mensajes_view', $datos, TRUE);
     $r = array('data' => $result, 'caso'=>$caso,

@@ -1,6 +1,6 @@
 <?php
 
-class usuario_model extends CI_Model
+class UsuarioModel extends CI_Model
 {
   public function fCambiarContrasena($data)
   {
@@ -15,10 +15,14 @@ class usuario_model extends CI_Model
         $correcto = $this->db->trans_status();
       }
       else
+      {
         $correcto = false;
+      }
     }
     else
+    {
       $correcto = false;
+    }
     return $correcto;
   }
 }

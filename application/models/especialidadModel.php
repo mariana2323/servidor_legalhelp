@@ -1,6 +1,6 @@
 <?php
 
-class especialidad_model extends CI_Model
+class EspecialidadModel extends CI_Model
 {
   public function fGetEspecialidades()
   {

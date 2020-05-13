@@ -1,6 +1,6 @@
 <?php
 
-class tipo_identificacion_model extends CI_Model
+class TipoIdentificacionModel extends CI_Model
 {
   public function fGetTipoIdentificacion()
   {

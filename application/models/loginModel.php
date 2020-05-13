@@ -1,6 +1,6 @@
 <?php
 
-class login_model extends CI_Model
+class LoginModel extends CI_Model
 {
   public function fLogin($pcUsr, $pcPwd)
   {
@@ -21,7 +21,9 @@ class login_model extends CI_Model
       return array("success"=>true, "nomusr"=>$query["nombre"], "usuario"=>$usr, "rol"=>$query["rol"], "imagen"=>$query["imagen"]);
     }
     else
-      return array("success"=>false);
+    {
+      return array("success" => false);
+    }
   }
   public function fLogOut()
   {
@@ -29,8 +31,7 @@ class login_model extends CI_Model
     $this->db->where("sesion_logeo", session_id());
     $this->db->where("id_usuario_logeo", $this->session->session_user);
     $this->db->set("fecha_fin_logeo", date('Y-m-d H:i:s'));
-    $query = $this->db->update("$bdd.seg_logeo_usuario");
-    return $query;
+    return $this->db->update("$bdd.seg_logeo_usuario");
   }
   public function fRegistrarse($data)
   {
@@ -39,7 +40,9 @@ class login_model extends CI_Model
     //se verifica que el correo no este registrado
     $verifica = $this->db->where("email", $data["email"])->get("usuario")->row_array();
     if (!empty($verifica))//si es que hay un registro con ese correo
-      return array("success"=>false);
+    {
+      return array("success" => false);
+    }
     else//si es que no hay otra registro con el mismo correo
     {
       $this->db->insert("usuario", $data);
@@ -49,7 +52,9 @@ class login_model extends CI_Model
         return array("success" => true, "newId" => $id);
       }
       else
+      {
         return array("success" => false);
+      }
     }
   }
 }

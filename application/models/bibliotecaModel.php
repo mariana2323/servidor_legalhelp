@@ -1,6 +1,6 @@
 <?php
 
-class biblioteca_model extends CI_Model
+class BibliotecaModel extends CI_Model
 {
   public function fGetBiblioteca($filtro)
   {
@@ -9,8 +9,6 @@ class biblioteca_model extends CI_Model
       $this->db->like("nombre", $filtro, 'both');
       $this->db->or_like("descripcion", $filtro, 'both');
     }
-    $query = $this->db->get("biblioteca")->result_array();
-    //echo $this->db->last_query();
-    return $query;
+    return $this->db->get("biblioteca")->result_array();
   }
 }

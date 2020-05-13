@@ -1,6 +1,6 @@
 <?php
 
-class general_model extends CI_Model
+class GeneralModel extends CI_Model
 {
   public function fGrdSave($tabla, $idcampo, $data)
   {
@@ -9,18 +9,26 @@ class general_model extends CI_Model
     $error = '';
     $this->db->trans_begin();
     if (isset($data[$idcampo]))
+    {
       $id = $data[$idcampo];
+    }
     else
+    {
       $id = '';
+    }
     $asso = array_keys($data);
     foreach ($asso as $a)
     {
       //Quita los valores vacíos del array de datos para que no se guarden vacíos y no den errores de FKs
       if (empty($data[$a]) && $a != $idcampo)
+      {
         $data[$a] = null;
+      }
       $marca2 = substr($a, 0, 4);
       if ($marca2 == "xxx_")
+      {
         unset($data[$a]);
+      }
     }
     $this->db->where($idcampo, $id);
     $cuantos = $this->db->get($tabla)->num_rows();
@@ -37,9 +45,13 @@ class general_model extends CI_Model
       if ($correcto)
       {
         if (empty($id))
+        {
           $newId = $this->db->insert_id();
+        }
         else
+        {
           $newId = $id;
+        }
         //CASO ESPECIAL
         if ($tabla == 'tarjeta')
         {
@@ -57,58 +69,54 @@ class general_model extends CI_Model
       $this->db->update($tabla, $data);
       $correcto = $this->db->trans_status();
       if ($correcto)
+      {
         $newId = $id;
+      }
     }
     if ($correcto)
     {
       //casos especiales despues de la inserción o actualización
-      if ($operacion == 'UPD')
+      if ($tabla == 'usuario' && $operacion == 'UPD' && isset($data["rol"]) && $data["rol"] == 'ABG')//Si se guardó a un abogado se debe crear un registro
       {
-        if ($tabla == 'usuario')
+        //se verifica si ya existe creado el abogado para ese usuario
+        $verificaabg = $this->db->where('usu_id', $data[$idcampo])->get("abogado")->row_array();
+        if (!empty($verificaabg))//ya existe el abogado, por lo tanto se cambia el estado a 'ACT'
         {
-          if (isset($data["rol"]))
-          {
-            if ($data["rol"] == 'ABG')//Si se guardó a un abogado se debe crear un registro
-            {
-              //se verifica si ya existe creado el abogado para ese usuario
-              $verificaabg = $this->db->where('usu_id', $data[$idcampo])->get("abogado")->row_array();
-              if (!empty($verificaabg))//ya existe el abogado, por lo tanto se cambia el estado a 'ACT'
-              {
-                $this->db->set("estado", 'ACT')->where("abo_id", $verificaabg["abo_id"])->update("abogado");
-                $correcto = $this->db->trans_status();
-              }
-              else
-              {
-                $dataabg = array('abo_id' => 0, 'usu_id' => $data[$idcampo], 'estado' => 'ACT', 'imagen' => 'usuario_imagen2.svg');
-                $this->db->insert("abogado", $dataabg);
-                $correcto = $this->db->trans_status();
-              }
-            }
-            else
-            {
-              //si existe un registro con estado activado debe desactivarse
-              $verificaabg = $this->db->where('usu_id', $data[$idcampo])->get("abogado")->row_array();
-              if (!empty($verificaabg))//ya existe el abogado, por lo tanto se cambia el estado a 'INA'
-              {
-                $this->db->set("estado", 'INA')->where("abo_id", $verificaabg["abo_id"])->update("abogado");
-                $correcto = $this->db->trans_status();
-              }
-            }
-          }
+          $this->db->set("estado", 'ACT')->where("abo_id", $verificaabg["abo_id"])->update("abogado");
+          $correcto = $this->db->trans_status();
+        }
+        else
+        {
+          $dataabg = array('abo_id' => 0, 'usu_id' => $data[$idcampo], 'estado' => 'ACT', 'imagen' => 'usuario_imagen2.svg');
+          $this->db->insert("abogado", $dataabg);
+          $correcto = $this->db->trans_status();
+        }
+      }
+      else
+      {
+        //si existe un registro con estado activado debe desactivarse
+        $verificaabg = $this->db->where('usu_id', $data[$idcampo])->get("abogado")->row_array();
+        if (!empty($verificaabg))//ya existe el abogado, por lo tanto se cambia el estado a 'INA'
+        {
+          $this->db->set("estado", 'INA')->where("abo_id", $verificaabg["abo_id"])->update("abogado");
+          $correcto = $this->db->trans_status();
         }
       }
     }
     if ($correcto)
+    {
       $this->db->trans_commit();
+    }
     else
     {
       $error = "Ha ocurrido un error.";
       $this->db->trans_rollback();
     }
     return array('success' => $correcto,
-      'newId' => $newId,
-      'error' => $error);
+                 'newId'   => $newId,
+                 'error'   => $error);
   }
+
   public function fGrdDelete($tabla, $idcampo, $data)
   {
     $this->db->trans_begin();
@@ -127,6 +135,7 @@ class general_model extends CI_Model
     }
     return array('success' => $correcto);
   }
+
   public function fReadForma($id, $tabla, $idcampo)
   {
     switch ($tabla)
@@ -144,13 +153,17 @@ class general_model extends CI_Model
       case 'tarjeta':
         $tarjeta = $this->db->select("tar_id")->where("usu_id", $this->session->session_user)->get("cliente")->row_array();
         if (!empty($tarjeta))
+        {
           $id = $tarjeta["tar_id"];
+        }
         else
+        {
           $id = 0;
+        }
+        break;
+      default:
         break;
     }
-    $res = $this->db->where("x.$idcampo", $id)->get("$tabla x")->row_array();
-    //echo $this->db->last_query();
-    return $res;
+    return $this->db->where("x.$idcampo", $id)->get("$tabla x")->row_array();
   }
 }

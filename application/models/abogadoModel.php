@@ -1,6 +1,6 @@
 <?php
 
-class abogado_model extends CI_Model
+class AbogadoModel extends CI_Model
 {
   public function fGetAbogados()
   {
@@ -8,9 +8,9 @@ class abogado_model extends CI_Model
     fNombrePersona(a.usu_id) AS xxx_nombre_usuario")->join("usuario u", "u.usu_id = a.usu_id", "inner")->get("abogado a");
     return $query->result_array();
   }
+
   public function fGetEstadosAbogado()
   {
-    $query = array(array("id" => 'ACT', "nombre"=> 'Activo'), array("id"=> 'INA', "nombre"=> 'Inactivo'));
-    return $query;
+    return array(array("id" => 'ACT', "nombre" => 'Activo'), array("id" => 'INA', "nombre" => 'Inactivo'));
   }
 }

@@ -1,7 +1,8 @@
 <?php
 
-class mensaje_model extends CI_Model
+class MensajeModel extends CI_Model
 {
+  public $success = 'success';
   public function fGetListaMensajes($filtro)
   {
     if (!empty($filtro))
@@ -17,6 +18,8 @@ class mensaje_model extends CI_Model
         case 3://Acción legal
           $estado = 'ACC';
           break;
+        default:
+          break;
       }
       $this->db->select("m.*, l.cli_id, fNombrePersona(l.usu_id) AS xxx_nombre_usuario, CONCAT('../servidor_legalhelp/img/', u.imagen) AS xxx_imagen")
         ->join("caso c", "c.cas_id = m.cas_id", 'inner')
@@ -26,12 +29,18 @@ class mensaje_model extends CI_Model
         ->group_by("c.cas_id");
       $query = $this->db->get("mensaje m")->result_array();
       if (!empty($query))
-        return array("success" => true, "data" => $query);
+      {
+        return array($this->success => true, "data" => $query);
+      }
       else
-        return array("success" => false, "data" => null);
+      {
+        return array($this->success => false, "data" => null);
+      }
     }
     else
-      return array("success" => true, "data" => null);
+    {
+      return array($this->success => true, "data" => null);
+    }
   }
   public function fGetMensajes($caso, $tipo_usuario, $ubicacion)
   {
@@ -50,13 +59,17 @@ class mensaje_model extends CI_Model
         case 3://Acción legal
           $estado = 'ACC';
           break;
+        default:
+          break;
       }
     }
     $datacaso = $this->db->where("cas_id", $caso)->get("caso")->row_array();
     if (!empty($datacaso))
     {
       if (empty($ubicacion))
+      {
         $estado = $datacaso["estado"];
+      }
       //se obtiene el nombre de la imagen del abogado:
       $imagenabg = $this->db->select("u.imagen")->where("a.abo_id", $datacaso["abo_id"])
         ->join("usuario u", "u.usu_id = a.usu_id", 'inner')
@@ -68,21 +81,33 @@ class mensaje_model extends CI_Model
       if (!empty($imagenabg))
       {
         if (empty($imagenabg["imagen"]))
+        {
           $imgabg = 'abogado_imagen.svg';
+        }
         else
+        {
           $imgabg = $imagenabg["imagen"];
+        }
       }
       else
+      {
         $imgabg = 'abogado_imagen.svg';
+      }
       if (!empty($imagencli))
       {
         if (empty($imagencli["imagen"]))
+        {
           $imgcli = 'usuario_imagen.svg';
+        }
         else
+        {
           $imgcli = $imagencli["imagen"];
+        }
       }
       else
+      {
         $imgcli = 'usuario_imagen.svg';
+      }
     }
     else
     {
@@ -101,9 +126,13 @@ class mensaje_model extends CI_Model
         ->join("usuario u", "u.usu_id = c.usu_id", 'inner')
         ->get("caso s")->row_array();
       if (!empty($verfcaso))
+      {
         $mensajes = $this->db->where("estado", $estado)->order_by("fecha")->get("mensaje")->result_array();
+      }
       else
+      {
         $mensajes = array();
+      }
     }
     if (!empty($mensajes))
     {
@@ -113,18 +142,26 @@ class mensaje_model extends CI_Model
         if (!empty($m["mensaje_abogado"]))//si hay un mensaje del abogado
         {
           if ($tipo_usuario == 'abogado')
+          {
             $mensajes[$i]["class"] = "chat self";
+          }
           else
+          {
             $mensajes[$i]["class"] = "chat friend";
+          }
           $mensajes[$i]["mensaje"] = $m["mensaje_abogado"];
           $mensajes[$i]["imagen"] = $imgabg;
         }
         if (!empty($m["mensaje_cliente"]))//si hay un mensaje del abogado
         {
           if ($tipo_usuario == 'cliente')
+          {
             $mensajes[$i]["class"] = "chat self";
+          }
           else
+          {
             $mensajes[$i]["class"] = "chat friend";
+          }
           $mensajes[$i]["mensaje"] = $m["mensaje_cliente"];
           $mensajes[$i]["imagen"] = $imgcli;
         }
@@ -132,7 +169,9 @@ class mensaje_model extends CI_Model
       }
     }
     else
+    {
       $mensajes = array();
+    }
     return $mensajes;
   }
   public function fSendMensaje($caso, $tipo, $mensaje, $ubicacion, $cliid)
@@ -152,6 +191,8 @@ class mensaje_model extends CI_Model
           break;
         case 3://Acción legal
           $estado = 'ACC';
+          break;
+        default:
           break;
       }
     }
@@ -190,7 +231,9 @@ class mensaje_model extends CI_Model
           $data = array("men_id" => 0, "cas_id" => $datacaso["cas_id"], "mensaje_$tipo" => $mensaje, "fecha" => $hoy, "estado" => $estado);
         }
         else
+        {
           $data = array();
+        }
       }
     }
     if (!empty($data))
@@ -199,6 +242,8 @@ class mensaje_model extends CI_Model
       return $this->db->trans_status();
     }
     else
+    {
       return false;
+    }
   }
 }

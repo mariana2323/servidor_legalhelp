@@ -2,6 +2,7 @@
 
 class Tarjeta extends CI_Controller
 {
+  public $success = 'success';
   public function __construct()
   {
     parent::__construct();
@@ -11,27 +12,33 @@ class Tarjeta extends CI_Controller
   {
     $res = $this->general_model->fReadForma('', 'tarjeta', 'tar_id');
     if (!empty($res))
-      $r = array("success" => true,
-        "data" => $res);
+    {
+      $r = array($this->success => true,
+                 "data"         => $res);
+    }
     else
-      $r = array("success" => false);
-
+    {
+      $r = array($this->success => false);
+    }
     echo json_encode($r);
   }
   public function saveTarjeta()
   {
     $data = json_decode($this->input->post('data'), TRUE);
     $res = $this->general_model->fGrdSave("tarjeta", "tar_id", $data);
-    $result = $res['success'];
+    $result = $res[$this->success];
     $newId = $res['newId'];
     $error = $res['error'];
     if ($result)
-      $r = array("success" => true,
-        "newId" => $newId);
+    {
+      $r = array($this->success => true,
+                 "newId"   => $newId);
+    }
     else
-      $r = array("success" => false,
-        "error" => $error);
-
+    {
+      $r = array($this->success => false,
+                 "error"   => $error);
+    }
     echo json_encode($r);
   }
 }

@@ -14,9 +14,13 @@ class Pago extends CI_Controller
     $data = json_decode($this->input->post('data'), TRUE);
     $result = $this->pago_model->fHabilitaPago($caso, $data);
     if ($result)
-      $r = array("success"=>true);
+    {
+      $r = array("success" => true);
+    }
     else
-      $r = array("success"=> false, "error"=>'Ha ocurrido un error habilitando el pago');
+    {
+      $r = array("success" => false, "error" => 'Ha ocurrido un error habilitando el pago');
+    }
     echo json_encode($r);
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-class detalle_pago_model extends CI_Model
+class DetallePagoModel extends CI_Model
 {
   public function fGetDetallePago()
   {
@@ -15,7 +15,6 @@ class detalle_pago_model extends CI_Model
       if (!empty($pago))
       {
         //3. se buscan los detalles
-        /*$result = $this->db->select("'Prueba' AS xxx_detalle")->where("pag_id", $pago["pag_id"])->get("detalle_pago")->result_array();*/
         $result = array(array("xxx_detalle"=>'ssd'), array("xxx_detalle"=>'jhhj'));
       }
     }
