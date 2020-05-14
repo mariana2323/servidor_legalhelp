@@ -17,6 +17,7 @@ class Tarjeta extends CI_Controller
     }
     else
     {
+
       $r = array($this->success => false);
     }
     echo json_encode($r);
