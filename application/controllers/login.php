@@ -6,7 +6,7 @@ class Login extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("login_model");
+    $this->load->model("LoginModel");
   }
 
   public function index()
@@ -14,7 +14,7 @@ class Login extends CI_Controller
     $usr = $this->input->post("email");
     $pwd = $this->input->post("password");
 
-    $result = $this->login_model->fLogin($usr, $pwd);
+    $result = $this->LoginModel->fLogin($usr, $pwd);
     if (!empty($result))
     {
       //Variable de sesión para el usuario
@@ -34,7 +34,7 @@ class Login extends CI_Controller
     $usuario = $this->session->session_user;
     if (!empty($usuario))
     {
-      $result = $this->login_model->fLogged($usuario);
+      $result = $this->LoginModel->fLogged($usuario);
     }
     else
     {
@@ -71,7 +71,7 @@ class Login extends CI_Controller
   public function registrarse()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $result = $this->login_model->fRegistrarse($data);
+    $result = $this->LoginModel->fRegistrarse($data);
     echo json_encode($result);
   }
 }

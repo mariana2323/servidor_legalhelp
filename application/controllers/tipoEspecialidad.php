@@ -6,11 +6,11 @@ class TipoEspecialidad extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("tipo_especialidad_model");
-    $this->load->model("general_model");
+    $this->load->model("TipoEspecialidadModel");
+    $this->load->model("GeneralModel");
   }
   public function getTipoEspecialidades(){
-    $result = $this->tipo_especialidad_model->fGetTipoEspecialidades();
+    $result = $this->TipoEspecialidadModel->fGetTipoEspecialidades();
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);
@@ -24,7 +24,7 @@ class TipoEspecialidad extends CI_Controller
   public function saveTipoEspecialidad()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdSave("tipo_especialidad", "tes_id", $data);
+    $res = $this->GeneralModel->fGrdSave("tipo_especialidad", "tes_id", $data);
     $result = $res[$this->success];
     $newId = $res['newId'];
     $error = $res['error'];
@@ -43,7 +43,7 @@ class TipoEspecialidad extends CI_Controller
   public function deleteTipoEspecialidad()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdDelete("tipo_especialidad", "tes_id", $data);
+    $res = $this->GeneralModel->fGrdDelete("tipo_especialidad", "tes_id", $data);
     $r = array($this->success => $res[$this->success]);
     echo json_encode($r);
   }

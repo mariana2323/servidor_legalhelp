@@ -5,14 +5,14 @@ class Mensaje extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("mensaje_model");
-    $this->load->model("general_model");
+    $this->load->model("MensajeModel");
+    $this->load->model("GeneralModel");
   }
 
   public function getListaMensajes()
   {
     $filtro = $this->input->get('filtro');
-    $result = $this->mensaje_model->fGetListaMensajes($filtro);
+    $result = $this->MensajeModel->fGetListaMensajes($filtro);
     echo json_encode($result);
   }
   public function getMensajes()
@@ -21,7 +21,7 @@ class Mensaje extends CI_Controller
     $ubicacion = $this->input->post('ubicacion');
     $tipo_usuario = $this->input->post('tipo_usuario');
     // Datos del reporte
-    $d = $this->mensaje_model->fGetMensajes($caso, $tipo_usuario, $ubicacion);
+    $d = $this->MensajeModel->fGetMensajes($caso, $tipo_usuario, $ubicacion);
     $datos['data'] = $d;
     if (!empty($d))
     {
@@ -44,7 +44,7 @@ class Mensaje extends CI_Controller
     $tipo = $this->input->post('tipo');
     $mensaje = $this->input->post('mensaje');
     $cliid = $this->input->post('cliente');
-    $res = $this->mensaje_model->fSendMensaje($caso, $tipo, $mensaje, $ubicacion, $cliid);
+    $res = $this->MensajeModel->fSendMensaje($caso, $tipo, $mensaje, $ubicacion, $cliid);
     $r = array('success' => $res);
     echo json_encode($r);
   }

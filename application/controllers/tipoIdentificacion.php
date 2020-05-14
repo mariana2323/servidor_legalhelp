@@ -6,12 +6,12 @@ class TipoIdentificacion extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("tipo_identificacion_model");
-    $this->load->model("general_model");
+    $this->load->model("TipoIdentificacionModel");
+    $this->load->model("GeneralModel");
   }
   public function getTipoIdentificacion()
   {
-    $result = $this->tipo_identificacion_model->fGetTipoIdentificacion();
+    $result = $this->TipoIdentificacionModel->fGetTipoIdentificacion();
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);
@@ -25,7 +25,7 @@ class TipoIdentificacion extends CI_Controller
   public function saveTipoIdentificacion()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdSave("tipo_identificacion", "tid_id", $data);
+    $res = $this->GeneralModel->fGrdSave("tipo_identificacion", "tid_id", $data);
     $result = $res[$this->success];
     $newId = $res['newId'];
     $error = $res['error'];
@@ -44,7 +44,7 @@ class TipoIdentificacion extends CI_Controller
   public function deleteTipoIdentificacion()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdDelete("tipo_identificacion", "tid_id", $data);
+    $res = $this->GeneralModel->fGrdDelete("tipo_identificacion", "tid_id", $data);
     $r = array($this->success => $res[$this->success]);
     echo json_encode($r);
   }

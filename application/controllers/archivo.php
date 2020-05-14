@@ -6,8 +6,8 @@ class Archivo extends CI_Controller
   {
     parent::__construct();
     $this->load->helper('file');
-    $this->load->model("abogado_model");
-    $this->load->model("general_model");
+    $this->load->model("AbogadoModel");
+    $this->load->model("GeneralModel");
   }
 
   public function saveImage()
@@ -74,7 +74,7 @@ class Archivo extends CI_Controller
       }
       if ($correcto)
       {
-        $result = $this->general_model->fGrdSave($tabla, $campoid, $data);
+        $result = $this->GeneralModel->fGrdSave($tabla, $campoid, $data);
         $correcto = $result['success'];
         $textoError = $result['error'];
       }

@@ -6,13 +6,13 @@ class Abogado extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("abogado_model");
-    $this->load->model("general_model");
+    $this->load->model("AbogadoModel");
+    $this->load->model("GeneralModel");
   }
 
   public function getAbogados()
   {
-    $result = $this->abogado_model->fGetAbogados();
+    $result = $this->AbogadoModel->fGetAbogados();
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);
@@ -26,7 +26,7 @@ class Abogado extends CI_Controller
   public function saveAbogado()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdSave("abogado", "abo_id", $data);
+    $res = $this->GeneralModel->fGrdSave("abogado", "abo_id", $data);
     $result = $res['success'];
     $newId = $res['newId'];
     $error = $res['error'];
@@ -44,7 +44,7 @@ class Abogado extends CI_Controller
   }
   public function getEstadosAbogado()
   {
-    $result = $this->abogado_model->fGetEstadosAbogado();
+    $result = $this->AbogadoModel->fGetEstadosAbogado();
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);

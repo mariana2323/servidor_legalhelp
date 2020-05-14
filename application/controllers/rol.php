@@ -6,12 +6,12 @@ class Rol extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("rol_model");
-    $this->load->model("general_model");
+    $this->load->model("RolModel");
+    $this->load->model("GeneralModel");
   }
   public function getRoles(){
     $filtro = $this->input->get('filtro');
-    $result = $this->rol_model->fGetRoles($filtro);
+    $result = $this->RolModel->fGetRoles($filtro);
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);
@@ -24,7 +24,7 @@ class Rol extends CI_Controller
   }
   public function getRolesCombo()
   {
-    $result = $this->rol_model->fGetRolesCombo();
+    $result = $this->RolModel->fGetRolesCombo();
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);
@@ -38,7 +38,7 @@ class Rol extends CI_Controller
   public function saveRol()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdSave("usuario", "usu_id", $data);
+    $res = $this->GeneralModel->fGrdSave("usuario", "usu_id", $data);
     $result = $res[$this->success];
     $newId = $res['newId'];
     $error = $res['error'];

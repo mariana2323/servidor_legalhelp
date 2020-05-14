@@ -6,11 +6,11 @@ class TipoTarjeta extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("tipo_tarjeta_model");
-    $this->load->model("general_model");
+    $this->load->model("TipoTarjetaModel");
+    $this->load->model("GeneralModel");
   }
   public function getTipoTarjeta(){
-    $result = $this->tipo_tarjeta_model->fGetTipoTarjeta();
+    $result = $this->TipoTarjetaModel->fGetTipoTarjeta();
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);
@@ -24,7 +24,7 @@ class TipoTarjeta extends CI_Controller
   public function saveTipoTarjeta()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdSave("tipo_tarjeta", "tta_id", $data);
+    $res = $this->GeneralModel->fGrdSave("tipo_tarjeta", "tta_id", $data);
     $result = $res[$this->success];
     $newId = $res['newId'];
     $error = $res['error'];
@@ -43,7 +43,7 @@ class TipoTarjeta extends CI_Controller
   public function deleteTipoTarjeta()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdDelete("tipo_tarjeta", "tta_id", $data);
+    $res = $this->GeneralModel->fGrdDelete("tipo_tarjeta", "tta_id", $data);
     $r = array($this->success => $res[$this->success]);
     echo json_encode($r);
   }

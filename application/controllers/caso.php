@@ -6,12 +6,12 @@ class Caso extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model("caso_model");
-    $this->load->model("general_model");
+    $this->load->model("CasoModel");
+    $this->load->model("GeneralModel");
   }
   public function getCasos(){
     $filtro = $this->input->get('filtro');
-    $result = $this->caso_model->fGetCasos($filtro);
+    $result = $this->CasoModel->fGetCasos($filtro);
     if (!empty($result))
     {
       $r = array($this->success => true, "data" => $result);
@@ -25,7 +25,7 @@ class Caso extends CI_Controller
   public function saveCaso()
   {
     $data = json_decode($this->input->post('data'), TRUE);
-    $res = $this->general_model->fGrdSave("caso", "cas_id", $data);
+    $res = $this->GeneralModel->fGrdSave("caso", "cas_id", $data);
     $result = $res['success'];
     $newId = $res['newId'];
     $error = $res['error'];
@@ -44,7 +44,7 @@ class Caso extends CI_Controller
   public function readCaso()
   {
     $id = $this->input->post('id');
-    $res = $this->general_model->fReadForma($id, 'caso', 'cas_id');
+    $res = $this->GeneralModel->fReadForma($id, 'caso', 'cas_id');
     if (!empty($res))
     {
       $r = array($this->success => true,
