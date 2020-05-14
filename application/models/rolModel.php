@@ -16,7 +16,8 @@ class RolModel extends CI_Model
   }
   public function fGetRolesCombo()
   {
-    return array(array("id" => 1, "rol" => "CLI", "xxx_rol" => "Cliente"),
-      array("id" => 2, "rol" => "ADM", "xxx_rol" => "Administrador"), array("id" => 3, "rol" => "ABG", "xxx_rol" => "Abogado"));
+    $xxx_rol = 'xxx_rol';
+    return array(array("id" => 1, "rol" => "CLI", $xxx_rol => "Cliente"),
+      array("id" => 2, "rol" => "ADM", $xxx_rol => "Administrador"), array("id" => 3, "rol" => "ABG", $xxx_rol => "Abogado"));
   }
 }

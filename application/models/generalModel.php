@@ -5,6 +5,11 @@ class GeneralModel extends CI_Model
   public function fGrdSave($tabla, $idcampo, $data)
   {
     $hoy = date('Y-m-d H:i:s');
+    $usu_id = 'usu_id';
+    $tar_id = 'tar_id';
+    $abogado = 'abogado';
+    $estadotxt = 'estado';
+    $abo_id = 'abo_id';
     $correcto = true;
     $error = '';
     $this->db->trans_begin();
@@ -55,7 +60,7 @@ class GeneralModel extends CI_Model
         //CASO ESPECIAL
         if ($tabla == 'tarjeta')
         {
-          $this->db->where("usu_id", $this->session->session_user)->set("tar_id", $newId)->update("cliente");
+          $this->db->where($usu_id, $this->session->session_user)->set($tar_id, $newId)->update("cliente");
           $correcto = $this->db->trans_status();
         }
       }
@@ -79,26 +84,26 @@ class GeneralModel extends CI_Model
       if ($tabla == 'usuario' && $operacion == 'UPD' && isset($data["rol"]) && $data["rol"] == 'ABG')//Si se guardó a un abogado se debe crear un registro
       {
         //se verifica si ya existe creado el abogado para ese usuario
-        $verificaabg = $this->db->where('usu_id', $data[$idcampo])->get("abogado")->row_array();
+        $verificaabg = $this->db->where($usu_id, $data[$idcampo])->get($abogado)->row_array();
         if (!empty($verificaabg))//ya existe el abogado, por lo tanto se cambia el estado a 'ACT'
         {
-          $this->db->set("estado", 'ACT')->where("abo_id", $verificaabg["abo_id"])->update("abogado");
+          $this->db->set($estadotxt, 'ACT')->where($abo_id, $verificaabg[$abo_id])->update($abogado);
           $correcto = $this->db->trans_status();
         }
         else
         {
-          $dataabg = array('abo_id' => 0, 'usu_id' => $data[$idcampo], 'estado' => 'ACT', 'imagen' => 'usuario_imagen2.svg');
-          $this->db->insert("abogado", $dataabg);
+          $dataabg = array($abo_id => 0, $usu_id => $data[$idcampo], $estadotxt => 'ACT', 'imagen' => 'usuario_imagen2.svg');
+          $this->db->insert($abogado, $dataabg);
           $correcto = $this->db->trans_status();
         }
       }
       else
       {
         //si existe un registro con estado activado debe desactivarse
-        $verificaabg = $this->db->where('usu_id', $data[$idcampo])->get("abogado")->row_array();
+        $verificaabg = $this->db->where($usu_id, $data[$idcampo])->get($abogado)->row_array();
         if (!empty($verificaabg))//ya existe el abogado, por lo tanto se cambia el estado a 'INA'
         {
-          $this->db->set("estado", 'INA')->where("abo_id", $verificaabg["abo_id"])->update("abogado");
+          $this->db->set($estadotxt, 'INA')->where($abo_id, $verificaabg[$abo_id])->update($abogado);
           $correcto = $this->db->trans_status();
         }
       }
@@ -138,6 +143,7 @@ class GeneralModel extends CI_Model
 
   public function fReadForma($id, $tabla, $idcampo)
   {
+    $tar_id = 'tar_id';
     switch ($tabla)
     {
       case 'caso':
@@ -151,10 +157,10 @@ class GeneralModel extends CI_Model
           ->join("abogado a", "a.abo_id = x.abo_id", 'left');
         break;
       case 'tarjeta':
-        $tarjeta = $this->db->select("tar_id")->where("usu_id", $this->session->session_user)->get("cliente")->row_array();
+        $tarjeta = $this->db->select($tar_id)->where("usu_id", $this->session->session_user)->get("cliente")->row_array();
         if (!empty($tarjeta))
         {
-          $id = $tarjeta["tar_id"];
+          $id = $tarjeta[$tar_id];
         }
         else
         {

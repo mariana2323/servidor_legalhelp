@@ -2,27 +2,31 @@
 
 class LoginModel extends CI_Model
 {
+  public $usu_id = 'usu_id';
+  public $emailtxt = 'email';
+  public $success = 'success';
+  public $usuariotxt = 'usuario';
   public function fLogin($pcUsr, $pcPwd)
   {
-    $this->db->select("usu_id");
-    $this->db->where("email", $pcUsr);
+    $this->db->select($this->usu_id);
+    $this->db->where($this->emailtxt, $pcUsr);
     $this->db->where("clave", md5($pcPwd));
-    $query = $this->db->get("usuario");
+    $query = $this->db->get($this->usuariotxt);
 
     return $query->row_array();
   }
   public function fLogged($usr)
   {
     $this->db->select("fNombrePersona(usu_id) AS nombre, rol, imagen");
-    $this->db->where("usu_id", $usr);
-    $query = $this->db->get("usuario")->row_array();
+    $this->db->where($this->usu_id, $usr);
+    $query = $this->db->get($this->usuariotxt)->row_array();
     if (!empty($query))
     {
-      return array("success"=>true, "nomusr"=>$query["nombre"], "usuario"=>$usr, "rol"=>$query["rol"], "imagen"=>$query["imagen"]);
+      return array($this->success=>true, "nomusr"=>$query["nombre"], $this->usuariotxt=>$usr, "rol"=>$query["rol"], "imagen"=>$query["imagen"]);
     }
     else
     {
-      return array("success" => false);
+      return array($this->success => false);
     }
   }
   public function fLogOut()
@@ -35,25 +39,25 @@ class LoginModel extends CI_Model
   }
   public function fRegistrarse($data)
   {
-    $data["usu_id"] = 0;
+    $data[$this->usu_id] = 0;
     unset($data["xxx_clave"]);
     //se verifica que el correo no este registrado
-    $verifica = $this->db->where("email", $data["email"])->get("usuario")->row_array();
+    $verifica = $this->db->where($this->emailtxt, $data[$this->emailtxt])->get($this->usuariotxt)->row_array();
     if (!empty($verifica))//si es que hay un registro con ese correo
     {
-      return array("success" => false);
+      return array($this->success => false);
     }
     else//si es que no hay otra registro con el mismo correo
     {
-      $this->db->insert("usuario", $data);
+      $this->db->insert($this->usuariotxt, $data);
       if ($this->db->trans_status())
       {
         $id = $this->db->insert_id();
-        return array("success" => true, "newId" => $id);
+        return array($this->success => true, "newId" => $id);
       }
       else
       {
-        return array("success" => false);
+        return array($this->success => false);
       }
     }
   }
